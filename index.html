@@ -51,7 +51,7 @@
     button:hover {
       background: #009ddc;
     }
-    .question-box, .reveal-box, .kick-box, .results-box {
+    .question-box, .reveal-box, .results-box {
       margin-top: 30px;
       display: none;
     }
@@ -82,10 +82,7 @@
 </div>
 
 <div class="reveal-box" id="revealBox">
-  <h2>Answers:</h2>
-  <p id="a1"></p>
-  <p id="a2"></p>
-  <p id="a3"></p>
+  <h2>Kick a Player</h2>
   <button onclick="kickPlayer(0)">Kick Player 1</button>
   <button onclick="kickPlayer(1)">Kick Player 2</button>
   <button onclick="kickPlayer(2)">Kick Player 3</button>
@@ -131,18 +128,13 @@
 
     function seeQuestion(index) {
       document.getElementById('yourQuestion').innerText = `${players[index]}, your question is: ${questions[index]}`;
+      setTimeout(() => {
+        document.getElementById('yourQuestion').innerText = "";
+      }, 8000); // Question disappears after 8 seconds
     }
 
     function revealRealQuestion() {
       alert("Real question (shared by 2 players): " + realQuestion);
-
-      const a1 = prompt("Player 1, what is your answer?");
-      const a2 = prompt("Player 2, what is your answer?");
-      const a3 = prompt("Player 3, what is your answer?");
-
-      document.getElementById('a1').innerText = `Player 1: ${a1}`;
-      document.getElementById('a2').innerText = `Player 2: ${a2}`;
-      document.getElementById('a3').innerText = `Player 3: ${a3}`;
       document.getElementById('revealBox').style.display = 'block';
     }
 

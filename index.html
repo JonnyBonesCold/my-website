@@ -51,7 +51,7 @@
     button:hover {
       background: #009ddc;
     }
-    .question-box, .reveal-box {
+    .question-box, .reveal-box, .kick-box, .results-box {
       margin-top: 30px;
       display: none;
     }
@@ -73,11 +73,12 @@
     <label>Player 3 Name:</label>
     <input id="p3" type="text" />
     <button onclick="startGame()">Start Game</button><div class="question-box" id="questionBox">
-  <h2>Player Questions (keep secret!):</h2>
-  <div class="player-question" id="q1"></div>
-  <div class="player-question" id="q2"></div>
-  <div class="player-question" id="q3"></div>
-  <button onclick="revealAnswers()">Reveal Answers</button>
+  <h2>See Your Question</h2>
+  <button onclick="seeQuestion(0)">Player 1: See your question</button>
+  <button onclick="seeQuestion(1)">Player 2: See your question</button>
+  <button onclick="seeQuestion(2)">Player 3: See your question</button>
+  <div class="player-question" id="yourQuestion"></div>
+  <button onclick="revealRealQuestion()">Reveal Real Question</button>
 </div>
 
 <div class="reveal-box" id="revealBox">
@@ -85,7 +86,13 @@
   <p id="a1"></p>
   <p id="a2"></p>
   <p id="a3"></p>
-  <h3>Who do you think is the impostor?</h3>
+  <button onclick="kickPlayer(0)">Kick Player 1</button>
+  <button onclick="kickPlayer(1)">Kick Player 2</button>
+  <button onclick="kickPlayer(2)">Kick Player 3</button>
+</div>
+
+<div class="results-box" id="resultsBox">
+  <h2 id="resultMessage"></h2>
 </div>
 
   </div> <script>
@@ -98,29 +105,37 @@
       ["What is a healthy number of steps per day?", "How many steps do you take per day?"]
     ];
 
+    let players = [];
+    let questions = [];
+    let imposterIndex = 0;
+    let realQuestion = "";
+
     function getRandomPair() {
       return similarPairs[Math.floor(Math.random() * similarPairs.length)];
     }
 
     function startGame() {
-      const players = [
+      players = [
         document.getElementById('p1').value || "Player 1",
         document.getElementById('p2').value || "Player 2",
         document.getElementById('p3').value || "Player 3"
       ];
 
-      const imposterIndex = Math.floor(Math.random() * 3);
+      imposterIndex = Math.floor(Math.random() * 3);
       const [commonQ, imposterQ] = getRandomPair();
+      realQuestion = commonQ;
 
-      const questions = players.map((_, i) => i === imposterIndex ? imposterQ : commonQ);
-
-      document.getElementById('q1').innerText = `${players[0]}: ${questions[0]}`;
-      document.getElementById('q2').innerText = `${players[1]}: ${questions[1]}`;
-      document.getElementById('q3').innerText = `${players[2]}: ${questions[2]}`;
+      questions = players.map((_, i) => i === imposterIndex ? imposterQ : commonQ);
       document.getElementById('questionBox').style.display = 'block';
     }
 
-    function revealAnswers() {
+    function seeQuestion(index) {
+      document.getElementById('yourQuestion').innerText = `${players[index]}, your question is: ${questions[index]}`;
+    }
+
+    function revealRealQuestion() {
+      alert("Real question (shared by 2 players): " + realQuestion);
+
       const a1 = prompt("Player 1, what is your answer?");
       const a2 = prompt("Player 2, what is your answer?");
       const a3 = prompt("Player 3, what is your answer?");
@@ -129,6 +144,15 @@
       document.getElementById('a2').innerText = `Player 2: ${a2}`;
       document.getElementById('a3').innerText = `Player 3: ${a3}`;
       document.getElementById('revealBox').style.display = 'block';
+    }
+
+    function kickPlayer(index) {
+      const resultText = (index === imposterIndex)
+        ? `${players[index]} was the impostor. You win!`
+        : `${players[index]} was not the impostor. Impostor wins! It was ${players[imposterIndex]}.`;
+
+      document.getElementById('resultMessage').innerText = resultText;
+      document.getElementById('resultsBox').style.display = 'block';
     }
   </script></body>
 </html>

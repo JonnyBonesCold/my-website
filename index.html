@@ -60,6 +60,20 @@
       padding: 10px;
       border-radius: 10px;
       margin-top: 10px;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -77,7 +91,10 @@
   <button onclick="seeQuestion(0)">Player 1: See your question</button>
   <button onclick="seeQuestion(1)">Player 2: See your question</button>
   <button onclick="seeQuestion(2)">Player 3: See your question</button>
-  <div class="player-question" id="yourQuestion"></div>
+  <div class="player-question" id="yourQuestion" style="display:none">
+    <button class="close-btn" onclick="hideQuestion()">X</button>
+    <span id="questionText"></span>
+  </div>
   <button onclick="revealRealQuestion()">Reveal Real Question</button>
 </div>
 
@@ -93,14 +110,35 @@
 </div>
 
   </div> <script>
-    const similarPairs = [
-      ["How many friends does the average person have?", "How many friends is too many in your opinion?"],
-      ["How many hours of sleep do people usually get?", "How many hours of sleep do you personally need?"],
-      ["How many countries are in Europe?", "How many countries do you want to visit?"],
-      ["What is the average daily screen time?", "What is your daily screen time?"],
-      ["What age do people usually get married?", "What age do you want to get married?"],
-      ["What is a healthy number of steps per day?", "How many steps do you take per day?"]
-    ];
+    const similarPairs = [];
+    for (let i = 1; i <= 1000; i++) {
+      similarPairs.push([
+        `Question ${i}: What is your opinion on topic ${i}?`,
+        `Question ${i}: How would you explain topic ${i} to a child?`
+      ]);
+    }
+
+    // Add a few interesting and less obvious ones
+    similarPairs.push([
+      "What's a country you want to visit?",
+      "What country do you think is overrated to visit?"
+    ]);
+    similarPairs.push([
+      "What's your favorite type of weather?",
+      "What kind of weather makes you sad?"
+    ]);
+    similarPairs.push([
+      "Which is better: cats or dogs?",
+      "Which animal is more intelligent: cat or dog?"
+    ]);
+    similarPairs.push([
+      "What social media do you use most?",
+      "Which social media do you dislike the most?"
+    ]);
+    similarPairs.push([
+      "What time do you usually go to sleep?",
+      "How many hours do you sleep usually?"
+    ]);
 
     let players = [];
     let questions = [];
@@ -127,10 +165,14 @@
     }
 
     function seeQuestion(index) {
-      document.getElementById('yourQuestion').innerText = `${players[index]}, your question is: ${questions[index]}`;
-      setTimeout(() => {
-        document.getElementById('yourQuestion').innerText = "";
-      }, 8000); // Question disappears after 8 seconds
+      const questionDiv = document.getElementById('yourQuestion');
+      const questionText = document.getElementById('questionText');
+      questionText.innerText = `${players[index]}, your question is: ${questions[index]}`;
+      questionDiv.style.display = 'block';
+    }
+
+    function hideQuestion() {
+      document.getElementById('yourQuestion').style.display = 'none';
     }
 
     function revealRealQuestion() {

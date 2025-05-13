@@ -1,225 +1,174 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Find the Impostor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Impostor Game</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');body {
-  font-family: 'Inter', sans-serif;
-  background: #1f2937;
-  color: #f9fafb;
-  padding: 40px;
-  margin: 0;
-}
-
-.container {
-  max-width: 640px;
-  margin: auto;
-  background: #111827;
-  padding: 35px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-h1 {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #e5e7eb;
-}
-
-label {
-  display: block;
-  margin-top: 20px;
-  font-weight: 500;
-}
-
-input {
-  padding: 12px;
-  width: 100%;
-  margin-top: 5px;
-  border: 1px solid #374151;
-  border-radius: 8px;
-  background-color: #1f2937;
-  color: #f3f4f6;
-  font-size: 16px;
-}
-
-button {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  margin-top: 25px;
-  background: linear-gradient(90deg, #3b82f6, #6366f1);
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99,102,241,0.4);
-}
-
-.question-box, .reveal-box, .results-box {
-  margin-top: 30px;
-}
-
-.player-question {
-  background: #374151;
-  padding: 20px;
-  border: 1px solid #4b5563;
-  border-radius: 8px;
-  margin-top: 10px;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #1f2937;
-  color: #f9fafb;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-#realQuestionBox {
-  margin-top: 20px;
-  background: #1e40af;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #60a5fa;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 500;
-  display: none;
-  color: #f9fafb;
-}
-
-.results-box h2 {
-  text-align: center;
-  margin-top: 30px;
-  color: #f9fafb;
-}
-
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 2em;
+      color: #00ffc3;
+    }
+    .player-box, .reveal-box {
+      margin: 15px;
+      padding: 20px;
+      background-color: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+    .question {
+      margin-top: 15px;
+      background-color: #2b2b2b;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #00ffc3;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #00cfa3;
+    }
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      background: #ff4b4b;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <audio id="revealSound" src="https://www.myinstants.com/media/sounds/sus-sound-effect.mp3"></audio>
-  <audio id="winSound" src="https://www.myinstants.com/media/sounds/victory.mp3"></audio>
-  <audio id="loseSound" src="https://www.myinstants.com/media/sounds/wrong-answer-sound-effect.mp3"></audio> <div class="container">
-    <h1>Find the Impostor</h1>
-    <label>Player 1 Name:</label>
-    <input id="p1" type="text" />
-    <label>Player 2 Name:</label>
-    <input id="p2" type="text" />
-    <label>Player 3 Name:</label>
-    <input id="p3" type="text" />
-    <button onclick="startGame()">Start Game</button><div class="question-box" id="questionBox">
-  <h2>See Your Question</h2>
-  <button onclick="seeQuestion(0)">Player 1: See your question</button>
-  <button onclick="seeQuestion(1)">Player 2: See your question</button>
-  <button onclick="seeQuestion(2)">Player 3: See your question</button>
 
-  <div class="player-question" id="yourQuestion" style="display:none">
-    <button class="close-btn" onclick="hideQuestion()">×</button>
-    <span id="questionText"></span>
+  <h1>Find the Impostor</h1>
+
+  <div class="player-box" id="player1">
+    <h3>Player 1</h3>
+    <button class="btn" onclick="showQuestion(0)">See your question</button>
+    <div class="question hidden" id="q0"><button class="close-btn" onclick="closeQuestion(0)">×</button></div>
   </div>
 
-  <button onclick="revealRealQuestion()">Reveal Real Question</button>
-  <div id="realQuestionBox"></div>
-</div>
+  <div class="player-box" id="player2">
+    <h3>Player 2</h3>
+    <button class="btn" onclick="showQuestion(1)">See your question</button>
+    <div class="question hidden" id="q1"><button class="close-btn" onclick="closeQuestion(1)">×</button></div>
+  </div>
 
-<div class="reveal-box" id="revealBox" style="display:none">
-  <h2>Kick a Player</h2>
-  <button onclick="kickPlayer(0)">Kick Player 1</button>
-  <button onclick="kickPlayer(1)">Kick Player 2</button>
-  <button onclick="kickPlayer(2)">Kick Player 3</button>
-</div>
+  <div class="player-box" id="player3">
+    <h3>Player 3</h3>
+    <button class="btn" onclick="showQuestion(2)">See your question</button>
+    <div class="question hidden" id="q2"><button class="close-btn" onclick="closeQuestion(2)">×</button></div>
+  </div>
 
-<div class="results-box" id="resultsBox">
-  <h2 id="resultMessage"></h2>
-</div>
+  <div class="reveal-box">
+    <button class="btn" onclick="revealRealQuestion()">Reveal Real Question</button>
+    <div id="real-question" class="question hidden"></div>
+  </div>
 
-  </div> <script>
+  <div class="reveal-box">
+    <h3>Kick a player</h3>
+    <button class="btn" onclick="kickPlayer(0)">Kick Player 1</button>
+    <button class="btn" onclick="kickPlayer(1)">Kick Player 2</button>
+    <button class="btn" onclick="kickPlayer(2)">Kick Player 3</button>
+  </div>
+
+  <button class="btn" onclick="startGame()">New Round</button>
+
+  <script>
     const similarPairs = [
-      ["How many countries have you visited?", "How many countries do you want to visit before you die?"],
-      ["What do you usually eat for breakfast?", "What’s your favorite breakfast food?"],
-      ["What’s your biggest fear?", "What’s a fear you think is irrational?"],
-      ["How many close friends do you have?", "How many friends is too many for you?"],
-      ["What’s your favorite holiday?", "What holiday do you not care about?"],
-      ["How many hours of sleep do you usually get?", "How many hours of sleep is ideal for you?"],
-      ["What’s your favorite season?", "Which season do you dislike the most?"],
-      ["What time do you usually wake up?", "What time do you wish you could wake up every day?"],
-      ["How long can you go without checking your phone?", "How often do you check your phone in a day?"],
-      ["What’s your favorite genre of music?", "What music genre do you listen to the least?"],
+      ["What's your favorite movie?", "What's the most overrated movie?"],
+      ["How many close friends do you have?", "How many friends do you think is too many?"],
+      ["What's the most beautiful place you've visited?", "Where would you never want to visit?"],
+      ["What's your dream job?", "What job would you be terrible at?"],
+      ["What's your biggest fear?", "What fear do you think is irrational?"],
+      ["What's the best meal you've had?", "What's the most disappointing meal?"],
+      ["What's a hobby you love?", "What hobby seems boring to you?"],
+      ["Who do you admire most?", "Who's someone people admire too much?"],
+      ["What's a good reason to cry?", "What's a dumb reason to cry?"],
+      ["What animal would you befriend?", "What animal would you avoid?"],
+      ["What's a perfect first date?", "What's a terrible first date idea?"],
+      ["What’s a trait you look for in a friend?", "What trait instantly makes you dislike someone?"],
+      ["What do you wish more people did?", "What do too many people do?"],
+      ["What's your favorite memory?", "What's a memory you'd erase?"],
+      ["What’s something you're proud of?", "What’s something others are proud of but shouldn’t be?"],
+      ["What’s a place you feel safe?", "What’s a place that makes you uncomfortable?"],
+      ["What makes a home feel like home?", "What makes a place feel empty?"],
+      ["What's your ideal weekend?", "What would ruin your weekend?"],
+      ["What do you want to be remembered for?", "What should people *not* be remembered for?"],
+      ["What's a personality trait you value?", "What personality trait is underrated?"],
+      // Add more pairs here if needed
     ];
 
-    let players = [];
-    let questions = [];
-    let imposterIndex = 0;
+    let questions = ["", "", ""];
     let realQuestion = "";
 
-    function getRandomPair() {
-      return similarPairs[Math.floor(Math.random() * similarPairs.length)];
-    }
-
     function startGame() {
-      players = [
-        document.getElementById('p1').value || "Player 1",
-        document.getElementById('p2').value || "Player 2",
-        document.getElementById('p3').value || "Player 3"
-      ];
+      const pair = similarPairs[Math.floor(Math.random() * similarPairs.length)];
+      const impostorIndex = Math.floor(Math.random() * 3);
 
-      imposterIndex = Math.floor(Math.random() * 3);
-      const [commonQ, imposterQ] = getRandomPair();
-      realQuestion = commonQ;
+      questions = questions.map((_, i) => i === impostorIndex ? pair[1] : pair[0]);
+      realQuestion = pair[0];
 
-      questions = players.map((_, i) => i === imposterIndex ? imposterQ : commonQ);
-      document.getElementById('questionBox').style.display = 'block';
-      document.getElementById('realQuestionBox').style.display = 'none';
-      document.getElementById('resultsBox').style.display = 'none';
-      document.getElementById('revealBox').style.display = 'none';
+      for (let i = 0; i < 3; i++) {
+        document.getElementById("q" + i).innerText = questions[i];
+        document.getElementById("q" + i).classList.add("hidden");
+      }
+
+      document.getElementById("real-question").classList.add("hidden");
     }
 
-    function seeQuestion(index) {
-      const questionDiv = document.getElementById('yourQuestion');
-      const questionText = document.getElementById('questionText');
-      questionText.innerText = `${players[index]}, your question is: ${questions[index]}`;
-      questionDiv.style.display = 'block';
+    function showQuestion(player) {
+      document.getElementById("q" + player).classList.remove("hidden");
     }
 
-    function hideQuestion() {
-      document.getElementById('yourQuestion').style.display = 'none';
+    function closeQuestion(player) {
+      document.getElementById("q" + player).classList.add("hidden");
     }
 
     function revealRealQuestion() {
-      document.getElementById('realQuestionBox').innerText = `Real question: ${realQuestion}`;
-      document.getElementById('realQuestionBox').style.display = 'block';
-      document.getElementById('revealBox').style.display = 'block';
-      document.getElementById('revealSound').play();
+      const rq = document.getElementById("real-question");
+      rq.innerText = "Real Question: " + realQuestion;
+      rq.classList.remove("hidden");
     }
 
     function kickPlayer(index) {
-      let resultText = "";
-      if (index === imposterIndex) {
-        resultText = `${players[index]} was the impostor. You win!`;
-        document.getElementById('winSound').play();
+      if (questions[index] !== realQuestion) {
+        alert("Correct! Player " + (index + 1) + " was the impostor.");
       } else {
-        resultText = `${players[index]} was not the impostor. Impostor wins! It was ${players[imposterIndex]}.`;
-        document.getElementById('loseSound').play();
+        alert("Wrong! Player " + (index + 1) + " was not the impostor.");
       }
-      document.getElementById('resultMessage').innerText = resultText;
-      document.getElementById('resultsBox').style.display = 'block';
     }
-  </script></body>
+
+    // Start first round on page load
+    startGame();
+  </script>
+
+</body>
 </html>

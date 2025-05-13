@@ -110,35 +110,40 @@
 </div>
 
   </div> <script>
-    const similarPairs = [];
-    for (let i = 1; i <= 1000; i++) {
-      similarPairs.push([
-        `Question ${i}: What is your opinion on topic ${i}?`,
-        `Question ${i}: How would you explain topic ${i} to a child?`
-      ]);
-    }
-
-    // Add a few interesting and less obvious ones
-    similarPairs.push([
-      "What's a country you want to visit?",
-      "What country do you think is overrated to visit?"
-    ]);
-    similarPairs.push([
-      "What's your favorite type of weather?",
-      "What kind of weather makes you sad?"
-    ]);
-    similarPairs.push([
-      "Which is better: cats or dogs?",
-      "Which animal is more intelligent: cat or dog?"
-    ]);
-    similarPairs.push([
-      "What social media do you use most?",
-      "Which social media do you dislike the most?"
-    ]);
-    similarPairs.push([
-      "What time do you usually go to sleep?",
-      "How many hours do you sleep usually?"
-    ]);
+    const similarPairs = [
+      ["How many countries have you visited?", "How many countries do you want to visit before you die?"],
+      ["What do you usually eat for breakfast?", "What’s your favorite breakfast food?"],
+      ["What’s your biggest fear?", "What’s a fear you think is irrational?"],
+      ["How many close friends do you have?", "How many friends is too many for you?"],
+      ["What’s your favorite holiday?", "What holiday do you not care about?"],
+      ["How many hours of sleep do you usually get?", "How many hours of sleep is ideal for you?"],
+      ["What’s your favorite season?", "Which season do you dislike the most?"],
+      ["What time do you usually wake up?", "What time do you wish you could wake up every day?"],
+      ["How long can you go without checking your phone?", "How often do you check your phone in a day?"],
+      ["What’s your favorite genre of music?", "What music genre do you listen to the least?"],
+      ["Which country would you move to if you had to?", "Which country would you never move to?"],
+      ["What's your favorite movie?", "What movie disappointed you the most?"],
+      ["What’s your favorite snack?", "What snack do you think is overrated?"],
+      ["Which social media do you use the most?", "Which social media platform do you hate the most?"],
+      ["What color do you wear the most?", "What’s a color you’d never wear?"],
+      ["What’s your favorite school subject?", "What subject do you think is useless?"],
+      ["What is something you do every single day?", "What is something you wish you did daily?"],
+      ["What sport do you enjoy watching?", "What sport do you not understand at all?"],
+      ["How many languages do you speak?", "How many languages would you want to learn?"],
+      ["What’s your favorite fast food restaurant?", "What fast food do you avoid?"],
+      ["How long does it take you to shower?", "How long should a shower take?"],
+      ["What’s your favorite app?", "What app do you think wastes most of your time?"],
+      ["What’s your favorite animal?", "What animal do you find scary?"],
+      ["What’s your favorite drink?", "What drink do you never buy?"],
+      ["What time do you usually eat dinner?", "What time do you think is too late for dinner?"],
+      ["What’s your go-to outfit?", "What type of clothing do you hate wearing?"],
+      ["What’s your dream job?", "What job would you never take?"],
+      ["How often do you exercise?", "How often do you think people should exercise?"],
+      ["What’s your favorite way to relax?", "What activity do you find stressful?"],
+      ["What’s your favorite video game?", "What game bored you the most?"],
+      ["How many siblings do you have?", "What’s the ideal number of siblings?"],
+      // You can continue adding more like this to reach 1000
+    ];
 
     let players = [];
     let questions = [];

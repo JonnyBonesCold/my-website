@@ -57,14 +57,15 @@
     }
     .player-question {
       background: #333;
-      padding: 10px;
+      padding: 20px;
       border-radius: 10px;
       margin-top: 10px;
       position: relative;
+      word-wrap: break-word;
     }
     .close-btn {
       position: absolute;
-      top: 5px;
+      top: 10px;
       right: 10px;
       background: red;
       color: white;
@@ -74,6 +75,16 @@
       height: 25px;
       font-weight: bold;
       cursor: pointer;
+    }
+    #realQuestionBox {
+      margin-top: 20px;
+      background: #111;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #00c3ff;
+      display: none;
+      text-align: center;
+      font-size: 18px;
     }
   </style>
 </head>
@@ -96,6 +107,7 @@
     <span id="questionText"></span>
   </div>
   <button onclick="revealRealQuestion()">Reveal Real Question</button>
+  <div id="realQuestionBox"></div>
 </div>
 
 <div class="reveal-box" id="revealBox">
@@ -142,7 +154,6 @@
       ["What’s your favorite way to relax?", "What activity do you find stressful?"],
       ["What’s your favorite video game?", "What game bored you the most?"],
       ["How many siblings do you have?", "What’s the ideal number of siblings?"],
-      // You can continue adding more like this to reach 1000
     ];
 
     let players = [];
@@ -167,6 +178,7 @@
 
       questions = players.map((_, i) => i === imposterIndex ? imposterQ : commonQ);
       document.getElementById('questionBox').style.display = 'block';
+      document.getElementById('realQuestionBox').style.display = 'none';
     }
 
     function seeQuestion(index) {
@@ -181,7 +193,8 @@
     }
 
     function revealRealQuestion() {
-      alert("Real question (shared by 2 players): " + realQuestion);
+      document.getElementById('realQuestionBox').innerText = `Real question: ${realQuestion}`;
+      document.getElementById('realQuestionBox').style.display = 'block';
       document.getElementById('revealBox').style.display = 'block';
     }
 

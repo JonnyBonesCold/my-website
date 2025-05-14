@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -65,65 +64,50 @@
     }
   </style>
 </head>
-<body>
-
-  <h1>Find the Impostor</h1>
-
-  <div class="player-box" id="player1">
+<body> <h1>Find the Impostor</h1> <div class="player-box" id="player1">
     <h3>Player 1</h3>
     <button class="btn" onclick="showQuestion(0)">See your question</button>
     <div class="question hidden" id="q0"><button class="close-btn" onclick="closeQuestion(0)">×</button></div>
-  </div>
-
-  <div class="player-box" id="player2">
+  </div> <div class="player-box" id="player2">
     <h3>Player 2</h3>
     <button class="btn" onclick="showQuestion(1)">See your question</button>
     <div class="question hidden" id="q1"><button class="close-btn" onclick="closeQuestion(1)">×</button></div>
-  </div>
-
-  <div class="player-box" id="player3">
+  </div> <div class="player-box" id="player3">
     <h3>Player 3</h3>
     <button class="btn" onclick="showQuestion(2)">See your question</button>
     <div class="question hidden" id="q2"><button class="close-btn" onclick="closeQuestion(2)">×</button></div>
-  </div>
-
-  <div class="reveal-box">
+  </div> <div class="reveal-box">
     <button class="btn" onclick="revealRealQuestion()">Reveal Real Question</button>
     <div id="real-question" class="question hidden"></div>
-  </div>
-
-  <div class="reveal-box">
+  </div> <div class="reveal-box">
     <h3>Kick a player</h3>
     <button class="btn" onclick="kickPlayer(0)">Kick Player 1</button>
     <button class="btn" onclick="kickPlayer(1)">Kick Player 2</button>
     <button class="btn" onclick="kickPlayer(2)">Kick Player 3</button>
-  </div>
-
-  <button class="btn" onclick="startGame()">New Round</button>
+  </div><button class="btn" onclick="startGame()">New Round</button>
 
   <script>
     const similarPairs = [
-      ["What's your favorite movie?", "What's the most overrated movie?"],
-      ["How many close friends do you have?", "How many friends do you think is too many?"],
-      ["What's the most beautiful place you've visited?", "Where would you never want to visit?"],
-      ["What's your dream job?", "What job would you be terrible at?"],
-      ["What's your biggest fear?", "What fear do you think is irrational?"],
-      ["What's the best meal you've had?", "What's the most disappointing meal?"],
-      ["What's a hobby you love?", "What hobby seems boring to you?"],
-      ["Who do you admire most?", "Who's someone people admire too much?"],
-      ["What's a good reason to cry?", "What's a dumb reason to cry?"],
-      ["What animal would you befriend?", "What animal would you avoid?"],
-      ["What's a perfect first date?", "What's a terrible first date idea?"],
-      ["What’s a trait you look for in a friend?", "What trait instantly makes you dislike someone?"],
-      ["What do you wish more people did?", "What do too many people do?"],
-      ["What's your favorite memory?", "What's a memory you'd erase?"],
-      ["What’s something you're proud of?", "What’s something others are proud of but shouldn’t be?"],
-      ["What’s a place you feel safe?", "What’s a place that makes you uncomfortable?"],
-      ["What makes a home feel like home?", "What makes a place feel empty?"],
-      ["What's your ideal weekend?", "What would ruin your weekend?"],
-      ["What do you want to be remembered for?", "What should people *not* be remembered for?"],
-      ["What's a personality trait you value?", "What personality trait is underrated?"],
-      // Add more pairs here if needed
+      ["How many friends does the average person have?", "Choose a number between 1–10."],
+      ["Who's your favourite celebrity?", "Who's the most overrated celebrity?"],
+      ["Other than your favourite country, what's your favourite country?", "Which country do you hate?"],
+      ["What's the best job to have?", "What job would Player 1-3 be good at?"],
+      ["For what reason would you 100% start a fight with someone?", "What's the dumbest reason to get into a fight?"],
+      ["What animal would you pick for your best friend?", "What's the most dangerous animal?"],
+      ["How many people would you want on your wedding?", "How many people would come to your funeral?"],
+      ["What's the best year to start a job?", "What's the best year to get married?"],
+      ["What is your favorite thing about yourself?", "What's your most annoying habit?"],
+      ["What's the most attractive quality in a person?", "What's the most unattractive trait in someone?"],
+      ["What's your dream vacation destination?", "Where would you never want to travel?"],
+      ["Who do you trust the most?", "Who do you trust the least?"],
+      ["What's your favorite childhood memory?", "What's a memory you wish you could forget?"],
+      ["What's the best compliment you've ever received?", "What's the worst insult someone gave you?"],
+      ["What's your favorite time of year?", "What season do you dislike most?"],
+      ["What's a song you love?", "What's a song you hate?"],
+      ["What's a weird food combo you enjoy?", "What's the grossest food combo?"],
+      ["What's your favorite thing to do on a weekend?", "What's the worst way to spend a weekend?"],
+      ["What's something you'd never lie about?", "What's something you think most people lie about?"],
+      ["What makes someone a good leader?", "What makes someone a terrible boss?"],
     ];
 
     let questions = ["", "", ""];
@@ -168,7 +152,5 @@
 
     // Start first round on page load
     startGame();
-  </script>
-
-</body>
+  </script></body>
 </html>

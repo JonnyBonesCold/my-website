@@ -1,116 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Find the Impostor</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Find the Impostor — Card Edition</title>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top, #181818, #0d0d0d);
-      color: #eee;
+    /* ==== Fonts & Reset ==== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    * { box-sizing: border-box; }
+    html,body { height: 100%; margin: 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+
+    /* ==== Page background ==== */
+    body{
+      background: radial-gradient(1000px 600px at 10% 10%, rgba(0,160,255,0.06), transparent 8%),
+                  radial-gradient(800px 500px at 90% 90%, rgba(150,0,255,0.04), transparent 10%),
+                  linear-gradient(180deg,#0b0f14 0%, #0f1418 100%);
+      color: #e6eef6;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      padding: 30px;
-      min-height: 100vh;
+      justify-content: center;
+      padding: 36px;
     }
-    h1 {
-      font-size: 2em;
-      color: #00ffc3;
-      margin-bottom: 15px;
-    }
-    .player-box, .reveal-box {
-      margin: 15px;
-      padding: 20px;
-      background-color: #1b1b1b;
-      border: 1px solid #333;
+
+    /* ==== Game shell ==== */
+    .app {
+      width: 920px;
+      max-width: 96%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       border-radius: 14px;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-      box-shadow: 0 0 20px rgba(0,255,195,0.05);
-      transition: 0.3s;
+      padding: 26px;
+      box-shadow: 0 8px 40px rgba(2,6,23,0.7);
+      border: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
     }
-    .player-box:hover, .reveal-box:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 25px rgba(0,255,195,0.1);
+
+    header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 18px;
     }
-    .question {
-      margin-top: 15px;
-      background-color: #2b2b2b;
-      padding: 15px;
-      border-radius: 8px;
+
+    .logo {
+      display:flex;
+      gap:12px;
+      align-items:center;
     }
+
+    .logo .badge {
+      width:48px;height:48px;border-radius:10px;
+      background: linear-gradient(135deg,#00f0c2,#5f7dff);
+      box-shadow: 0 6px 20px rgba(95,125,255,0.2), inset 0 -6px 20px rgba(255,255,255,0.06);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:#071025;
+      font-size:18px;
+    }
+
+    .title {
+      font-size:20px;
+      font-weight:700;
+      color: #eaf9ff;
+      letter-spacing:0.3px;
+    }
+
+    .sub {
+      font-size:12px;color:#95a3b7;margin-top:2px;
+    }
+
+    /* ==== Controls row ==== */
+    .controls {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:18px;
+      justify-content:flex-end;
+    }
+
     .btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #00ffc3;
-      color: #000;
+      background: linear-gradient(180deg,#00f0c2,#00d4a8);
       border: none;
-      border-radius: 8px;
-      font-weight: bold;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: #042027;
+      font-weight: 700;
       cursor: pointer;
-      transition: 0.2s;
+      box-shadow: 0 8px 20px rgba(0,212,168,0.08);
+      transition: transform .12s ease, box-shadow .12s ease;
     }
-    .btn:hover {
-      background-color: #00cfa3;
+    .btn.secondary {
+      background: linear-gradient(180deg,#2b3350,#1b2030);
+      color:#cfe7ff;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:none;
     }
-    .close-btn {
+    .btn:hover { transform: translateY(-3px); }
+
+    /* ==== Stage: player column + center real question ==== */
+    .stage {
+      display:grid;
+      grid-template-columns: 1fr 460px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Left & right player stacks */
+    .player-stack {
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:center;
+    }
+
+    /* Card style (glass + neon edge) */
+    .card {
+      width: 320px;
+      max-width:100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: 12px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      position: relative;
+      transform-origin: center;
+      overflow: visible;
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .22s;
+    }
+
+    /* neon edge */
+    .card::after {
+      content: "";
       position: absolute;
-      top: 12px;
-      right: 15px;
-      background: #ff4b4b;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      font-weight: bold;
-      cursor: pointer;
+      inset: 0;
+      border-radius: 12px;
+      padding: 1px;
+      border: 1px solid transparent;
+      background: linear-gradient(transparent, transparent);
+      pointer-events:none;
+      box-shadow: 0 0 30px rgba(0,240,194,0.06);
+      mix-blend-mode: screen;
     }
-    .hidden {
-      display: none;
+
+    .card .meta {
+      display:flex;align-items:center;gap:12px;
     }
+    .avatar {
+      width:44px;height:44px;border-radius:10px;
+      background: linear-gradient(180deg,#27324a,#1a2230);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:#cfe7ff;
+      font-size:14px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .player-name { font-weight:700; font-size:15px; color:#e6f7ff; }
+    .player-sub { font-size:12px;color:#9fb0c5; margin-top:4px; }
+
+    .question-text {
+      margin-top:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));
+      border-radius:8px;
+      padding:14px;
+      color:#e6eef6;
+      font-size:15px;
+      line-height:1.4;
+      min-height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+    }
+
+    .show-btn { margin-top:12px; display:block; width:100%; }
+
+    /* Small responsive tweaks */
+    @media (max-width: 980px) {
+      .stage { grid-template-columns: 1fr; }
+      .player-stack { flex-direction: row; gap:12px; justify-content:center; }
+      .card { width: 300px; }
+    }
+
+    /* Card reveal animation */
+    .card.hidden { opacity: 0; transform: translateY(6px) scale(.995); pointer-events:none; }
+    .card.revealed { animation: pop .28s cubic-bezier(.2,.9,.2,1) both; pointer-events:auto; }
+    @keyframes pop {
+      from { transform: translateY(8px) scale(.98); opacity:0; }
+      60% { transform: translateY(-6px) scale(1.02); opacity:1; }
+      to { transform: translateY(0) scale(1); }
+    }
+
+    /* Center real-question big card */
+    .center {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+    .real-card {
+      width: 420px;
+      max-width:100%;
+      border-radius: 14px;
+      padding: 20px;
+      text-align:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));
+      border: 1px solid rgba(255,255,255,0.03);
+      color:#eaf9ff;
+      min-height:110px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      line-height:1.3;
+      transform-origin:center;
+    }
+
+    .real-card.hidden { opacity:0; transform: translateY(6px) scale(.995); pointer-events:none; }
+    .real-card.revealed { animation: pop .28s cubic-bezier(.2,.9,.2,1) both; }
+
+    /* small hint text */
+    .hint { font-size:13px;color:#95a3b7;margin-top:6px;text-align:center; }
+
+    /* kicker row */
+    .kicker {
+      display:flex;
+      gap:12px;
+      margin-top:14px;
+      justify-content:center;
+      align-items:center;
+    }
+
   </style>
 </head>
 <body>
+  <div class="app" role="application" aria-label="Find the Impostor game">
+    <header>
+      <div class="logo">
+        <div class="badge">FI</div>
+        <div>
+          <div class="title">Find the Impostor</div>
+          <div class="sub">3 players • one impostor • reveal and vote</div>
+        </div>
+      </div>
 
-  <h1>Find the Impostor</h1>
+      <div class="controls">
+        <button class="btn secondary" onclick="startGame()">New Round</button>
+        <button class="btn" onclick="revealRealQuestion()">Reveal Real Question</button>
+      </div>
+    </header>
 
-  <div class="player-box" id="player1">
-    <h3>Player 1</h3>
-    <button class="btn" onclick="showQuestion(0)">See your question</button>
-    <div class="question hidden" id="q0"><button class="close-btn" onclick="closeQuestion(0)">×</button></div>
+    <main class="stage">
+      <!-- left players -->
+      <div class="player-stack" id="leftStack">
+        <div class="card" style="width:320px">
+          <div class="meta">
+            <div class="avatar">1</div>
+            <div>
+              <div class="player-name">Player 1</div>
+              <div class="player-sub">Click to see your private question</div>
+            </div>
+          </div>
+
+          <div id="card0" class="question-text hidden" aria-hidden="true">
+            <button class="close-btn" onclick="closeQuestion(0)" title="Hide">×</button>
+            <div id="q0" style="width:100%"></div>
+          </div>
+
+          <button class="btn show-btn" onclick="showQuestion(0)">See your question</button>
+        </div>
+      </div>
+
+      <!-- center real question -->
+      <div class="center">
+        <div id="realCard" class="real-card hidden" aria-hidden="true"></div>
+        <div class="hint">After two players see their cards, press <strong>Reveal Real Question</strong></div>
+
+        <div class="kicker">
+          <button class="btn secondary" onclick="kickPlayer(0)">Kick Player 1</button>
+          <button class="btn secondary" onclick="kickPlayer(1)">Kick Player 2</button>
+          <button class="btn secondary" onclick="kickPlayer(2)">Kick Player 3</button>
+        </div>
+      </div>
+
+      <!-- right players -->
+      <div class="player-stack" id="rightStack">
+        <div class="card" style="width:320px">
+          <div class="meta">
+            <div class="avatar">2</div>
+            <div>
+              <div class="player-name">Player 2</div>
+              <div class="player-sub">Click to see your private question</div>
+            </div>
+          </div>
+
+          <div id="card1" class="question-text hidden" aria-hidden="true">
+            <button class="close-btn" onclick="closeQuestion(1)" title="Hide">×</button>
+            <div id="q1" style="width:100%"></div>
+          </div>
+
+          <button class="btn show-btn" onclick="showQuestion(1)">See your question</button>
+        </div>
+
+        <div style="height:18px"></div>
+
+        <div class="card" style="width:320px">
+          <div class="meta">
+            <div class="avatar">3</div>
+            <div>
+              <div class="player-name">Player 3</div>
+              <div class="player-sub">Click to see your private question</div>
+            </div>
+          </div>
+
+          <div id="card2" class="question-text hidden" aria-hidden="true">
+            <button class="close-btn" onclick="closeQuestion(2)" title="Hide">×</button>
+            <div id="q2" style="width:100%"></div>
+          </div>
+
+          <button class="btn show-btn" onclick="showQuestion(2)">See your question</button>
+        </div>
+      </div>
+    </main>
   </div>
-
-  <div class="player-box" id="player2">
-    <h3>Player 2</h3>
-    <button class="btn" onclick="showQuestion(1)">See your question</button>
-    <div class="question hidden" id="q1"><button class="close-btn" onclick="closeQuestion(1)">×</button></div>
-  </div>
-
-  <div class="player-box" id="player3">
-    <h3>Player 3</h3>
-    <button class="btn" onclick="showQuestion(2)">See your question</button>
-    <div class="question hidden" id="q2"><button class="close-btn" onclick="closeQuestion(2)">×</button></div>
-  </div>
-
-  <div class="reveal-box">
-    <button class="btn" onclick="revealRealQuestion()">Reveal Real Question</button>
-    <div id="real-question" class="question hidden"></div>
-  </div>
-
-  <div class="reveal-box">
-    <h3>Kick a player</h3>
-    <button class="btn" onclick="kickPlayer(0)">Kick Player 1</button>
-    <button class="btn" onclick="kickPlayer(1)">Kick Player 2</button>
-    <button class="btn" onclick="kickPlayer(2)">Kick Player 3</button>
-  </div>
-
-  <button class="btn" onclick="startGame()">New Round</button>
 
   <script>
+    /* ============================
+       Question pairs (kept from earlier + many new pairs)
+       ============================ */
     const similarPairs = [
       ["What's your favorite movie?", "What's the most overrated movie?"],
       ["How many close friends do you have?", "How many friends do you think is too many?"],
@@ -132,81 +344,137 @@
       ["What's your ideal weekend?", "What would ruin your weekend?"],
       ["What do you want to be remembered for?", "What should people *not* be remembered for?"],
       ["What's a personality trait you value?", "What personality trait is overrated?"],
-      ["How many friends does an average person have?", "Choose a number between 1–10."],
-      ["Who’s your favorite celebrity?", "Who’s the most overrated celebrity?"],
-      ["Other than your favorite country, what’s your favorite?", "Which country do you hate?"],
-      ["What’s the best job to have?", "What job would you be good at?"],
-      ["For what reason would you 100% start a fight?", "What’s the dumbest reason to get into a fight?"],
-      ["What animal would you pick as your best friend?", "What’s the most dangerous animal?"],
+
+      /* your example-style pairs + extras */
+      ["How many friends does the average person have?", "Choose a number between 1–10."],
+      ["Who's your favorite celebrity?", "Who's the most overrated celebrity?"],
+      ["Other than your favorite country, what's your favorite country?", "Which country do you hate?"],
+      ["What's the best job to have?", "What job would Player 1 be good at?"],
+      ["What's the best job to have?", "What job would Player 2 be good at?"],
+      ["What's the best job to have?", "What job would Player 3 be good at?"],
+      ["For what reason would you 100% start a fight with someone?", "What's the dumbest reason to get into a fight?"],
+      ["What animal would you pick for your best friend?", "What's the most dangerous animal?"],
       ["How many people would you want at your wedding?", "How many people would come to your funeral?"],
-      ["What’s the best year to start a job?", "What’s the best year to get married?"],
-      ["Who’s someone you trust most?", "Who’s someone you’d never trust?"],
-      ["What’s something that makes you instantly happy?", "What’s something that instantly ruins your mood?"],
-      ["Who would you call first if you won the lottery?", "Who would you hide it from first?"],
-      ["What would you do on your dream vacation?", "What would ruin your vacation?"],
-      ["What’s your favorite season?", "Which season do you dislike the most?"],
-      ["What’s something you find attractive?", "What’s something that makes someone unattractive instantly?"],
-      ["What’s a good reason to lie?", "What’s a terrible reason to lie?"],
-      ["What’s your favorite music genre?", "What’s a genre you can’t stand?"],
-      ["What’s the best thing about your school?", "What’s the worst thing about your school?"],
-      ["What’s a talent you wish you had?", "What’s a talent you think is overrated?"],
-      ["What’s your favorite color?", "What’s your least favorite color?"],
-      ["What’s the best advice you’ve received?", "What’s the worst advice you’ve heard?"],
-      ["What’s something you could talk about for hours?", "What’s something you can’t stand to talk about?"],
-      ["What’s the funniest thing you’ve seen?", "What’s the dumbest thing you’ve seen?"],
-      ["Who’s your favorite fictional character?", "Who’s the most annoying fictional character?"],
-      ["What’s a food you love?", "What’s a food you can’t eat?"],
-      ["What’s your dream car?", "What’s an overrated car brand?"],
-      ["What’s something you miss from childhood?", "What’s something you’re glad you left behind?"],
-      ["What’s a movie everyone should watch?", "What movie should no one ever watch?"],
-      ["What’s your favorite holiday?", "What holiday is overrated?"],
-      ["What’s something you’re addicted to?", "What’s something you can easily give up?"],
-      ["What would make a person instantly likable?", "What would make someone instantly unlikeable?"]
+      ["What's the best year to start a job?", "What's the best year to get married?"],
+      ["What kind of weather do you love?", "What kind of weather ruins your day?"],
+      ["What's a food you could eat every day?", "What's a food you could never eat?"],
+      ["What's your biggest goal right now?", "What’s something you don’t care about achieving?"],
+      ["What’s your favorite childhood toy?", "What’s the most annoying toy?"],
+      ["Which superpower would you want?", "Which superpower would be the worst to have?"],
+      ["What's a perfect day for you?", "What would ruin a perfect day?"],
+      ["Which language would you want to speak fluently?", "Which language sounds the worst to you?"],
+      ["What’s something you're saving up for?", "What’s something not worth saving for?"],
+      ["What's the best holiday?", "What holiday is overrated?"],
+      ["What sport would you want to master?", "What sport do you not care about?"],
+      ["What's your favorite song right now?", "What's the most overplayed song ever?"],
+      ["What’s a TV show everyone should watch?", "What’s a TV show that wasted your time?"],
+      ["What’s a gift you'd love to get?", "What’s a gift you’d never want to get again?"],
+      ["What's a personality trait you admire?", "What's a trait that's overrated?"],
+      ["What's a social media app you enjoy?", "Which app do you hate the most?"],
+      ["What’s something you'd do for free?", "What’s something you wouldn’t do for any money?"],
+      ["What’s a life hack you use a lot?", "What’s a useless tip you’ve heard?"],
+      ["What’s the best age to be?", "What’s the worst age to be?"],
+      ["What’s your favorite time of the day?", "When do you feel the most tired?"],
+      ["What’s a compliment you love getting?", "What compliment feels fake to you?"],
+      ["What’s a movie that made you cry?", "What movie bored you to death?"],
+      ["Who is someone who changed your life?", "Who is someone you try to avoid?"],
+      ["What’s something that motivates you?", "What’s something that drains your motivation?"],
+      ["What game do you love playing?", "What game do you hate watching?"],
+      ["What's your favorite smell?", "What's a smell you can't stand?"],
+      ["What's your favorite part of your daily routine?", "What's the most annoying part of your day?"],
+      ["What’s a question you love being asked?", "What’s a question you hate being asked?"],
+      ["What's a trend you loved?", "What's a trend that should never return?"],
+      ["What's the best advice you ever got?", "What's the worst advice people always give?"],
+      ["What's something you're always prepared for?", "What's something you always forget?"],
+      ["What’s a quote you love?", "What’s a quote that sounds deep but isn’t?"],
+      ["What's the best compliment you've ever received?", "What's the weirdest compliment you've ever received?"],
+      ["What do you believe is real love?", "What do people *think* is love but isn’t?"],
+      ["What makes someone mature?", "What makes someone act like a child?"],
+      ["What's your favorite genre of music?", "What's a music genre you can't stand?"],
+      ["What’s the best way to start a conversation?", "What’s the worst way to start a conversation?"],
+      ["What's your favorite holiday?", "What's a holiday you don’t care about?"],
+      ["What's something you collect or would like to collect?", "What’s something people collect that you find useless?"],
+      ["Who would you love to have dinner with?", "Who would you hate to be stuck with at dinner?"],
+      ["What's a gift you’d love to receive?", "What’s the worst gift you ever got?"],
+      ["What's your favorite app?", "What's the most annoying app?"],
+      ["What's a childhood toy you loved?", "What's a toy that never made sense to you?"],
+      ["What skill do you want to learn?", "What skill is useless to you?"],
+      ["What's a food you could eat every day?", "What food would you ban forever?"],
+      ["What's a dream vacation?", "What's a place that sounds boring to visit?"],
+      ["What's the best compliment you've ever received?", "What compliment do people give that feels fake?"]
     ];
 
+    /* ============================
+       Game state
+       ============================ */
     let questions = ["", "", ""];
     let realQuestion = "";
+    let impIndex = 0;
 
     function startGame() {
+      // pick a random pair and random impostor
       const pair = similarPairs[Math.floor(Math.random() * similarPairs.length)];
-      const impostorIndex = Math.floor(Math.random() * 3);
+      impIndex = Math.floor(Math.random() * 3);
 
-      questions = questions.map((_, i) => i === impostorIndex ? pair[1] : pair[0]);
+      // assign: two players get pair[0], impostor gets pair[1]
+      questions = questions.map((_, i) => i === impIndex ? pair[1] : pair[0]);
       realQuestion = pair[0];
 
+      // hide all cards and populate text
       for (let i = 0; i < 3; i++) {
-        document.getElementById("q" + i).innerText = questions[i];
-        document.getElementById("q" + i).classList.add("hidden");
+        document.getElementById("q"+i).textContent = questions[i];
+        const card = document.getElementById("card"+i);
+        card.classList.add("hidden");
+        card.classList.remove("revealed");
+        card.setAttribute("aria-hidden","true");
       }
 
-      document.getElementById("real-question").classList.add("hidden");
+      // hide real question card
+      const real = document.getElementById("realCard");
+      real.classList.add("hidden");
+      real.classList.remove("revealed");
+      real.setAttribute("aria-hidden","true");
+      real.textContent = "";
+
+      // subtle hint (could be used for analytics or UI)
+      console.log("New round started. Impostor is player index:", impIndex);
     }
 
-    function showQuestion(player) {
-      document.getElementById("q" + player).classList.remove("hidden");
+    function showQuestion(idx) {
+      const card = document.getElementById("card"+idx);
+      card.classList.remove("hidden");
+      void card.offsetWidth; // trigger reflow for animation
+      card.classList.add("revealed");
+      card.setAttribute("aria-hidden","false");
     }
 
-    function closeQuestion(player) {
-      document.getElementById("q" + player).classList.add("hidden");
+    function closeQuestion(idx) {
+      const card = document.getElementById("card"+idx);
+      card.classList.add("hidden");
+      card.classList.remove("revealed");
+      card.setAttribute("aria-hidden","true");
     }
 
     function revealRealQuestion() {
-      const rq = document.getElementById("real-question");
-      rq.innerText = "Real Question: " + realQuestion;
-      rq.classList.remove("hidden");
+      const real = document.getElementById("realCard");
+      real.textContent = "REAL QUESTION — " + realQuestion;
+      real.classList.remove("hidden");
+      void real.offsetWidth;
+      real.classList.add("revealed");
+      real.setAttribute("aria-hidden","false");
     }
 
     function kickPlayer(index) {
-      if (questions[index] !== realQuestion) {
-        alert("✅ Correct! Player " + (index + 1) + " was the impostor.");
+      // reveal win/lose via simple modal-style alert - you can replace with fancier UI
+      if (index === impIndex) {
+        alert("✅ Correct — Player " + (index+1) + " was the impostor. You win!");
       } else {
-        alert("❌ Wrong! Player " + (index + 1) + " was not the impostor.");
+        alert("❌ Nope — Player " + (index+1) + " was not the impostor. The impostor was Player " + (impIndex+1) + ".");
       }
     }
 
-    // Start first round
+    // start first round automatically
     startGame();
   </script>
-
 </body>
 </html>

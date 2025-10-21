@@ -192,3 +192,28 @@
 
 </body>
 </html>
+
+<div class="reveal-box">
+  <button class="btn" onclick="revealRealQuestion()">Reveal Real Question</button>
+  <div class="card hidden" id="real-card" onclick="flipRealCard()">
+    <div class="front">Real question will appear here</div>
+    <div class="back" id="rq"></div>
+  </div>
+</div>
+
+<script>
+function revealRealQuestion() {
+  const rq = document.getElementById("rq");
+  rq.innerText = realQuestion;
+
+  const card = document.getElementById("real-card");
+  card.classList.remove("hidden");
+
+  // Automatically flip the card so it shows the real question
+  card.classList.add("flipped");
+}
+
+function flipRealCard() {
+  document.getElementById("real-card").classList.toggle("flipped");
+}
+</script>

@@ -87,7 +87,9 @@
       gap: 20px;
     }
     .kick-box {
-      margin-top: 20px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
     }
   </style>
 </head>
@@ -129,23 +131,96 @@
 
   <div class="reveal-box">
     <button class="btn" onclick="revealRealQuestion()">Reveal Real Question</button>
-    <div id="real-question" class="card hidden"><div class="back" id="rq"></div></div>
+    <div class="card hidden" id="real-card" onclick="flipRealCard()">
+      <div class="front">Click to reveal real question</div>
+      <div class="back" id="rq"></div>
+    </div>
   </div>
 
   <button class="btn hidden" id="new-round" onclick="startGame()">New Round</button>
 
   <script>
     const similarPairs = [
-      ["How many friends does average person have?", "Choose a number between 1-10"],
-      ["Who's your favourite celebrity?", "Who's the most overrated celebrity?"],
-      ["Other than your favourite country, what's your favourite country?", "Which country do you hate?"],
-      ["What's the best job to have?", "What job would you be good at?"],
-      ["For what reason would you 100% start a fight with someone?", "What's the dumbest reason to get into a fight?"],
-      ["What animal would you pick for your best friend?", "What's the most dangerous animal?"],
-      ["How many people would you want on your wedding?", "How many people would come to your funeral?"],
-      ["What's the best year to start a job?", "What's the best year to get married?"],
-      // Add more here or up to 200+ like you wanted
-    ];
+  ["How many friends does average person have?", "Choose a number between 1-10"],
+  ["Who's your favourite celebrity?", "Who's the most overrated celebrity?"],
+  ["Other than your favourite country, what's your favourite country?", "Which country do you hate?"],
+  ["What's the best job to have?", "What job would you be good at?"],
+  ["For what reason would you 100% start a fight with someone?", "What's the dumbest reason to get into a fight?"],
+  ["What animal would you pick for your best friend?", "What's the most dangerous animal?"],
+  ["How many people would you want on your wedding?", "How many people would come to your funeral?"],
+  ["What's the best year to start a job?", "What's the best year to get married?"],
+  ["What's your favorite movie?", "What's the most overrated movie?"],
+  ["How many close friends do you have?", "How many friends do you think is too many?"],
+  ["What's the most beautiful place you've visited?", "Where would you never want to visit?"],
+  ["What's your dream job?", "What job would you be terrible at?"],
+  ["What's your biggest fear?", "What fear do you think is irrational?"],
+  ["What's the best meal you've had?", "What's the most disappointing meal?"],
+  ["What's a hobby you love?", "What hobby seems boring to you?"],
+  ["Who do you admire most?", "Who's someone people admire too much?"],
+  ["What's a good reason to cry?", "What's a dumb reason to cry?"],
+  ["What's a perfect first date?", "What's a terrible first date idea?"],
+  ["What’s a trait you look for in a friend?", "What trait instantly makes you dislike someone?"],
+  ["What do you wish more people did?", "What do too many people do?"],
+  ["What's your favorite memory?", "What's a memory you'd erase?"],
+  ["What’s something you're proud of?", "What’s something others are proud of but shouldn’t be?"],
+  ["What’s a place you feel safe?", "What’s a place that makes you uncomfortable?"],
+  ["What makes a home feel like home?", "What makes a place feel empty?"],
+  ["What's your ideal weekend?", "What would ruin your weekend?"],
+  ["What do you want to be remembered for?", "What should people *not* be remembered for?"],
+  ["What's a personality trait you value?", "What personality trait is underrated?"],
+  ["If you could have any superpower, what would it be?", "What's a useless superpower you’d choose?"],
+  ["What would you do on a deserted island?", "What would be the worst thing to do on an island?"],
+  ["What's your favorite sport?", "What's the most overrated sport?"],
+  ["What's your dream vacation?", "What's your worst vacation ever?"],
+  ["What's your favorite book?", "What's the most boring book you read?"],
+  ["What do you do to relax?", "What’s a stressful hobby you’d try?"],
+  ["What's the best way to spend a day off?", "What's the worst way to spend a day off?"],
+  ["If you could change one thing about yourself, what would it be?", "What's something pointless to change?"],
+  ["What’s a song you love?", "What's a song everyone loves but you hate?"],
+  ["What's your favorite season?", "What's the worst season for you?"],
+  ["What's your favorite food?", "What's a food you hate?"],
+  ["What's your favorite color?", "What's the ugliest color to you?"],
+  ["What's the most fun game to play?", "What's a boring game you tried?"],
+  ["What's a habit you have?", "What's a useless habit you noticed in yourself?"],
+  ["If you could meet anyone, who would it be?", "Who would you *never* want to meet?"],
+  ["What's your favorite animal?", "What's the most annoying animal?"],
+  ["What's your favorite subject?", "What's the most boring subject?"],
+  ["What's a skill you want to learn?", "What's a skill completely useless?"],
+  ["What motivates you most?", "What demotivates you the most?"],
+  ["What’s your favorite holiday?", "What holiday do you hate?"],
+  ["What's the best gift you received?", "What's the worst gift you received?"],
+  ["What's your favorite drink?", "What's a drink you can't stand?"],
+  ["What's your favorite outfit?", "What's the worst outfit you ever wore?"],
+  ["What's the funniest thing you've seen?", "What's the most awkward moment you witnessed?"],
+  ["What's the bravest thing you did?", "What's the dumbest risk you took?"],
+  ["What's your favorite hobby?", "What's a hobby you would never try?"],
+  ["What's your favorite childhood memory?", "What's a childhood memory you'd erase?"],
+  ["What's a place you'd love to live?", "What's a place you’d never move to?"],
+  ["What's your dream car?", "What's the worst car you could imagine?"],
+  ["What's your favorite TV show?", "What's the most overrated TV show?"],
+  ["What's your favorite type of music?", "What's the most annoying music genre?"],
+  ["What's your favorite app?", "What's an app you hate?"],
+  ["What's your favorite dessert?", "What's the worst dessert you've eaten?"],
+  ["What's a goal you have?", "What's a goal that’s pointless?"],
+  ["What's your favorite thing to do with friends?", "What's something friends do that annoys you?"],
+  ["What's your favorite place in your city?", "What's the ugliest place in your city?"],
+  ["What's a talent you admire?", "What's a talent you think is useless?"],
+  ["What's your favorite type of weather?", "What's the worst weather to you?"],
+  ["What's your favorite social media platform?", "What's the worst social media platform?"],
+  ["What's your favorite superhero?", "What's a superhero you dislike?"],
+  ["What's your favorite game?", "What's a game you can't stand?"],
+  ["What's your favorite tradition?", "What's the worst tradition you know?"],
+  ["What's your favorite time of day?", "What's the worst time of day?"],
+  ["What's your favorite joke?", "What's the lamest joke you've heard?"],
+  ["What's your favorite city?", "What's a city you dislike?"],
+  ["What's a habit that relaxes you?", "What's a habit that stresses you?"],
+  ["What's a good compliment?", "What's a bad compliment?"],
+  ["What's your favorite mode of transport?", "What's the worst mode of transport?"],
+  ["What's your dream job location?", "What's a location you would hate to work in?"],
+  ["What's your favorite memory with friends?", "What's the worst memory with friends?"],
+  ["What's your favorite childhood toy?", "What's the worst childhood toy?"],
+// … You can continue adding until 200+ or 1000+ pairs as you want
+];
 
     let questions = ["", "", ""];
     let realQuestion = "";
@@ -162,7 +237,7 @@
         document.getElementById("card" + i).classList.remove("flipped");
       }
 
-      document.getElementById("real-question").classList.add("hidden");
+      document.getElementById("real-card").classList.add("hidden");
       document.getElementById("new-round").classList.add("hidden");
     }
 
@@ -172,9 +247,14 @@
     }
 
     function revealRealQuestion() {
-      const rq = document.getElementById("real-question");
-      document.getElementById("rq").innerText = "Real Question: " + realQuestion;
-      rq.classList.remove("hidden");
+      document.getElementById("rq").innerText = realQuestion;
+      const card = document.getElementById("real-card");
+      card.classList.remove("hidden");
+      card.classList.add("flipped");
+    }
+
+    function flipRealCard() {
+      document.getElementById("real-card").classList.toggle("flipped");
     }
 
     function kickPlayer(index) {
@@ -192,28 +272,3 @@
 
 </body>
 </html>
-
-<div class="reveal-box">
-  <button class="btn" onclick="revealRealQuestion()">Reveal Real Question</button>
-  <div class="card hidden" id="real-card" onclick="flipRealCard()">
-    <div class="front">Real question will appear here</div>
-    <div class="back" id="rq"></div>
-  </div>
-</div>
-
-<script>
-function revealRealQuestion() {
-  const rq = document.getElementById("rq");
-  rq.innerText = realQuestion;
-
-  const card = document.getElementById("real-card");
-  card.classList.remove("hidden");
-
-  // Automatically flip the card so it shows the real question
-  card.classList.add("flipped");
-}
-
-function flipRealCard() {
-  document.getElementById("real-card").classList.toggle("flipped");
-}
-</script>
